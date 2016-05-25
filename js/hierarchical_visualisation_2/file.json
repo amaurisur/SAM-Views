@@ -1,0 +1,35 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "name": "Metrica Simple 1.1",
+          "position": 0,
+          "percentage": 0.0,
+          "description": "Descripcion: TODO"
+        },
+        {
+          "name": "Ede",
+          "position": 0,
+          "percentage": 0.75,
+          "description": "Descripcion: TODO"
+        }
+      ],
+      "name": "Metrica Compuesta 1",
+      "position": 0,
+      "percentage": 0.0,
+      "description": "Descripcion: TODO"
+    },
+    {
+      "children": [],
+      "name": "Metrica Compuesta 2",
+      "position": 0,
+      "percentage": 0.0,
+      "description": "Descripcion: TODO"
+    }
+  ],
+  "name": "Indicador QA-Document",
+  "position": 0,
+  "percentage": 0.0,
+  "description": "Descripcion: TODO"
+}

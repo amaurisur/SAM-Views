@@ -1,0 +1,101 @@
+{
+  "params": {
+    "treeF1Score": 0.9, 
+    "confusionmatrix": [
+      [
+        226687.0, 
+        4852.0
+      ], 
+      [
+        4778.0, 
+        18815.0
+      ]
+    ]
+  }, 
+  "name": "RootNode", 
+  "children": [
+    {
+      "params": {
+        "numInstToThisNode": {
+
+          }, 
+        "f1-score": 0.75, 
+        "confusionmatrix": [
+          [
+            5294, 
+            997
+          ], 
+          [
+            1005, 
+            6132
+          ]
+        ]
+      }, 
+      "name": "NODO1.1", 
+      "children": [
+        {
+          "params": {
+            "numInstToThisNode": {
+
+              }, 
+            "f1-score": 0.5, 
+            "confusionmatrix": [
+              [
+                5294, 
+                997
+              ], 
+              [
+                1005, 
+                6132
+              ]
+            ]
+          }, 
+          "name": "NODO1.1.1", 
+          "children": [
+          ]
+        },
+        {
+          "params": {
+            "numInstToThisNode": {
+
+              }, 
+            "f1-score": 0.5, 
+            "confusionmatrix": [
+              [
+                5294, 
+                997
+              ], 
+              [
+                1005, 
+                6132
+              ]
+            ]
+          }, 
+          "name": "NODO1.1.2", 
+          "children": [
+          ]
+        }
+      ]
+    },
+    {
+      "params": {
+        "numInstToThisNode": {
+        }, 
+        "f1-score": 0.25, 
+        "confusionmatrix": [
+          [
+            5294, 
+            997
+          ], 
+          [
+            1005, 
+            6132
+          ]
+        ]
+      }, 
+      "name": "NODO1.2", 
+      "children": [
+      ]
+    }
+  ]
+}

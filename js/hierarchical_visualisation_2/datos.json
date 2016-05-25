@@ -5,98 +5,33 @@
                         [
                             {   
                                 "children":[],
-                                "params":{
-                                          "porcentaje":0.25,
-                                          "numInstToThisNode":{},
-                                          "confusionmatrix": [
-                                                                [
-                                                                    226687.0, 
-                                                                    4852.0
-                                                                ], 
-                                                                [
-                                                                    4778.0, 
-                                                                    18815.0
-                                                                ]
-                                                               ]
-                                         },
                                 "name":"Metrica Simple 1.1",
                                 "posicion":0,
-                                "valor":0
+                                "descripcion":"TODO",
+                                "porcentaje":1
                             },   
                             {   "children":[],
-                                "params":{
-                                            "porcentaje":0.25,
-                                            "numInstToThisNode":{},
-                                            "confusionmatrix": [
-                                                                   [
-                                                                        226687.0, 
-                                                                        4852.0
-                                                                   ], 
-                                                                   [
-                                                                        4778.0, 
-                                                                        18815.0
-                                                                   ]
-                                                               ]
-                                            },
                                 "name":"Metrica Simple 1.2",
                                 "posicion":0,
-                                "valor":0
+                                "descripcion":"TODO",
+                                "porcentaje":1
                             }
                         ],
-                     "params":{
-                                "porcentaje":0.5,
-                                "numInstToThisNode":{},
-                                "confusionmatrix": [
-                                                       [
-                                                            226687.0, 
-                                                            4852.0
-                                                         ], 
-                                                        [
-                                                            4778.0, 
-                                                            18815.0
-                                                        ]
-                                                    ]
-                            },
                      "name":"Metrica Compuesta 1",
                      "posicion":1,
-                     "valor":0
+                     "descripcion":"TODO",
+                     "porcentaje":1
                     },
                     {
                      "children":[],
-                     "params":{
-                                "porcentaje": 0.2,
-                                "numInstToThisNode":{},
-                                "confusionmatrix": [
-                                                       [
-                                                            226687.0, 
-                                                            4852.0
-                                                         ], 
-                                                        [
-                                                            4778.0, 
-                                                            18815.0
-                                                        ]
-                                                    ]
-                            },
                      "name":"Metrica Simple 2",
                      "posicion":1,
-                     "valor":0
+                     "descripcion":"TODO",
+                     "porcentaje": 1                    
                     }
                 ],
-"params":{
-         "porcentajeRaiz":0.7,
-         "numInstToThisNode":{},
-         "confusionmatrix": [
-                              [
-                                226687.0, 
-                                4852.0
-                              ], 
-                              [
-                                4778.0, 
-                                18815.0
-                              ]
-                            ]
-         },
 "name":"RootNode",
-"posicion":1,
-"valor":0
+"posicion":0,
+"descripcion":"TODO",
+"porcentaje":1
 }

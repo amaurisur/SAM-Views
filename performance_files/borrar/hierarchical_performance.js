@@ -4,77 +4,64 @@ console.log("Starting main script...")
 var jsonRoot = "/js/hierarchical_visualisation_2"
 //var jsonRoot = "./"
 var normFac = 90
-var fontSize = 14
+var fontSize = 10
 var lineSpace = 2
-var boxHeight = 90 // 60
-var boxWidth = 195 // 130
+var boxHeight = 60
+var boxWidth = 130
 var infoBoxHeight = boxHeight*4.5
 var infoBoxWidth = boxWidth*4.5
-var width = 1366
-var height = 760
+var width = 960
+var height = 1000
 
 var yscale_performancebar = d3.scale.linear()
                                 .domain([0,1])
                                 .rangeRound([boxHeight/2,-boxHeight/2])
-//metodo de ordenamiento
-// Deveria usarlo para ordenar los nodos al mismo nivel
+
 function comparator(a,b){
 	// Order nodes alphabetically
 	return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
-//metodo espaciado en el arbol
 function separation(a, b) {
 	  return (a.parent == b.parent ? 1 : 2);
 	}
-//define el arbol                                
+                                
 var tree = d3.layout.tree()
-    .size([height,height])
+    .size([height, width - 160])
 	.sort(comparator)
 	.separation(separation)
 
-//diagonal de la grafica
 var diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.y, d.x]; });
 
-//crea la grafica que se va a caracterizar segun update
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
-  .append("g")// para agrupar los elementos dentro del svg
-    .attr("transform", "translate(110,0)"); //Mueve los elementos sobre x e y
+  .append("g")
+    .attr("transform", "translate(80,0)");
 
-//update('datos.json')
-update('file.json')
+update('ftype-PCA_method-global_ps-63_dataset-dataset_bigpatch_127.tsv-hlnp-0.5.json')
 
 function update(fileName) {
-    //busca el archivo con los datos o sea el json
     var jsonPath = [jsonRoot, fileName].join("/")
 
     // Load a json file, and perform the following function when it loads
     console.log('Loading json file: '.concat(jsonPath))
     d3.json(jsonPath, function(error, root) {
 
-        // Retorna un array de nodos asociados a root
         var nodes = tree.nodes(root),
             links = tree.links(nodes);
 
 	    //DATA JOIN: Bind existing objects to new data
-        // Agrega clases tipo nodo y enlaces al SVG
         var existingLinks = svg.selectAll(".link")
     		                     .data(links)
         var existingNodes = svg.selectAll(".node")
                                 .data(nodes)
-        //children se cambio por children
-        //No estaría funcionando ver
-        var totalInst = d3.sum(root.children.map(function(d){return d.percentage}))
+        var totalInst = d3.sum(root.children.map(function(d){return d.params.nKPsForThisNode}))
         normFac = 1*totalInst/boxHeight
 
         //UPDATE: Update old elements (before making new ones)
 
         //ENTER: Create new objects where necessary
-        //Agrega el elmento svg path para digamos definir el camino del arco
-        //Le agrega el estilo link
-
         existingLinks.enter().append("path")
             .attr("class", "link")
             .attr("d", diagonal)
@@ -82,10 +69,9 @@ function update(fileName) {
         // Create a box for each classification node, and assign properties
         newNodes = existingNodes.enter().append("g")
         newNodes
-            //Agrego el atributo class de tipo nodo
             .attr("class", "node")
-            .attr("id", function(d){console.log(d.name);console.log("  Coordenadas antes del translate: (" + d.x +" , "+ d.y + ")\n");return d.name})
-            .attr("transform", function(d) { return ("translate(" + d.y + "," + d.x + ")") })
+            .attr("id", function(d){console.log(d.name);return d.name})
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
             .append("rect")
                 .attr('class', 'nodebox')
                 .attr("x", -boxWidth/2)
@@ -101,26 +87,20 @@ function update(fileName) {
             .attr("y", boxHeight/2)
             .attr("height", 0)
 
-        //Informacion en los nodos
+        //Add text to nodes for title, f1-score and confusion matrix
         newNodes.append("text")
-            .attr("id", "tituloMetrica")
-            .attr("class", "tituloMetrica")
+            .attr("id", "nodetitle")
+            .attr("class", "nodeTitle")
             .attr("y", -boxHeight/2 + fontSize + 2*lineSpace)
             .attr("text-anchor", "middle")
 
         newNodes.append("text")
             .attr("text-anchor", "middle")
             .attr("class", "nodeText")
-            .attr("id", "percentage")
+            .attr("id", "f1Text")
             .attr("y", -boxHeight/2 + 2*fontSize + 4*lineSpace)
 
-        newNodes.append("text")
-            .attr("text-anchor", "middle")
-            .attr("class", "nodeText")
-            .attr("id", "descripcionMetrica")
-
-
-/*        newNodes.append("g")
+        newNodes.append("g")
             .attr("class", "confusionmatrix")
             .attr("id", "confusionmatrix")
             .selectAll("g").data(function(d){return d.params.confusionmatrix})
@@ -133,62 +113,53 @@ function update(fileName) {
             .attr("transform", function(d,i) { return "translate(" + i*3*fontSize + ",0)"; })
             .append("text")
             .attr("text-anchor", "middle")
-            .attr("class", "nodeText")*/
+            .attr("class", "nodeText")
 
         //ENTER + UPDATE: Update all nodes with new attributes (text, edge width)
         existingNodes.select('#performancebar')
             .transition()
-            .duration(1050)
+            .duration(1000)
             .attr("y", function(d){
-                            //Define el valor de la posicion de y segun la escala
-                            return yscale_performancebar(d.percentage)
+                            return yscale_performancebar(d.params["f1-score"])
                             })
             .attr("height", function(d){
-                            //Rellena segun el valor recibido
-                            return boxHeight/2 - yscale_performancebar(d.percentage)
+                            return boxHeight/2 - yscale_performancebar(d.params["f1-score"])
                             })
 
         existingLinks
             .transition()
             .duration(1000)
-            .style("stroke-width", function(d){return ((d.percentage*100)*60)/100})
-        existingNodes.select("#tituloMetrica")
-            .text(function(d){return d.name/*.split("_").slice(-1)*/})
+            .style("stroke-width", function(d){return d.target.params.nKPsForThisNode/normFac})
+        existingNodes.select("#nodetitle")
+            .text(function(d){return d.name.split("_").slice(-1)})
 
-        existingNodes.select("#percentage")
-            .text(function(d){return node1Text(d)})
-
-        existingNodes.select("#descripcionMetrica")
-            .text(function(d){return d.descripcion})
-
-
-/*        // Update confusion matrix
+        existingNodes.select("#f1Text")
+            .text(node1Text)
+        // Update confusion matrix
         existingNodes.select("#confusionmatrix")
             .selectAll(".rows")
             .data(function(d){return d.params.confusionmatrix})
                 .selectAll(".columns") //rows
                 .data(function(d){return d})
                     .select("text")
-                    .text(function(d){return d})*/
+                    .text(function(d){return d})
 
 
         //Overwrite data in root node, to give the "Tree" f1-score
         var rootNode = svg.select("#RootNode")
 
-        var rootParams = rootNode.data()[0]
+        var rootParams = rootNode.data()[0]["params"]
         //Update root node performance bar
           rootNode.select('#performancebar')
           .transition()
           .duration(1000)
           .attr("y", function(d){
-              return yscale_performancebar(rootParams["percentage"])
+              return yscale_performancebar(rootParams["treeF1Score"])
           })
           .attr("height", function(d){
-              return boxHeight/2 - yscale_performancebar(rootParams["percentage"])
+              return boxHeight/2 - yscale_performancebar(rootParams["treeF1Score"])
           })
-        rootNode.select("#percentage")
-            //.text("Total Calidad Documentacion Cubierta:")
-            //.append("text")
+        rootNode.select("#f1Text")
             .text(rootText)
 
         // Highlight a node if we mouse-over it, and display the information box
@@ -217,15 +188,14 @@ function update(fileName) {
             svg.selectAll(".link")
                 .transition().duration(250)
                 .style("stroke", null)
-                .style("stroke-width", function(d){return (d.percentage)})
+                .style("stroke-width", function(d){return d.target.params.nKPsForThisNode/normFac})
         })
 
     });
 
     // Display up the info box (for mouse overs)
 	function displayInfoBox(node) {
-		//var nodeName = node.attr("#descripcionMetrica")
-        var nodeName = thisNode.data()[0]["descripcion"]
+		var nodeName = node.attr("id")
         var infoX = infoBoxWidth/2*0.6
         var infoY = infoBoxHeight/2*1.05
 		var infoBox = svg.append("g")
@@ -240,14 +210,14 @@ function update(fileName) {
             .text(nodeName)
             .attr("font-size", fontSize + 8 + "px")
 
-/*        var imgOffsetX = -infoBoxWidth/2 * 0.95
+        var imgOffsetX = -infoBoxWidth/2 * 0.95
         var imgOffsetY = -infoBoxHeight/2 + fontSize+8 + 2*lineSpace
 		infoBox
             .append("svg:image")
         	.attr("xlink:href", "sample_patches/"+nodeName+".png")
             .attr("width", infoBoxWidth*0.99)
             .attr("height", infoBoxHeight*0.99)
-            .attr("transform", function(d) {return "translate(" + imgOffsetX + "," + imgOffsetY + ")";})*/
+            .attr("transform", function(d) {return "translate(" + imgOffsetX + "," + imgOffsetY + ")";})
 	}
 
 
@@ -258,30 +228,25 @@ function update(fileName) {
 	}
 
     // Format f1score message
-    //valor de la metrica, o sea percentage a mostrar
     function node1Text(d) {
-        var f1Score = d.percentage
-        return "percentage: "+ d3.format("0.1f")(f1Score*100.0) + "%"
+        var f1Score = d.params["f1-score"]
+        return "F1-Score: " + d3.format("0.1f")(f1Score*100) + "%"
     }
     
     // Format root node message
-    //valor de la metrica para el indicador final, o sea nodo raiz
     function rootText(d) {
-        var f1Score = d.percentage
-        return d3.format("0.1f")(f1Score*100.0) + "%"
+        var f1Score = d.params["treeF1Score"]
+        return "Tree F1-Score: " + d3.format("0.1f")(f1Score*100) + "%"
     }
 
     // Calculate the width of the edge between nodes
     function getLinkWidthClass(node) {
     	var className = thisNode.attr("id")
     	var rootNode = d3.select('#RootNode')[0][0].__data__
-    	//var allInstOfThisClass = d3.sum(rootNode.children.map(function(d){return d.params.numInstToThisNode[className]}))
-        //var thisNodeTPs = node.target.params.numInstToThisNode[className]
-        //var myWidth = thisNodeTPs * boxHeight / allInstOfThisClass
-        var ancho = d3.select('#RootNode')[0][0].__data__.percentage
-        return d3.format("0.1f")((ancho*100)*90/100)
-        // var ancho = d3.select('#RootNode')[0][0].__data__.percentage.format("0.1f")
-        // return ancho*90/100
+    	var allInstOfThisClass = d3.sum(rootNode.children.map(function(d){return d.params.numInstToThisNode[className]}))
+        var thisNodeTPs = node.target.params.numInstToThisNode[className]
+        var myWidth = thisNodeTPs * boxHeight / allInstOfThisClass
+        return myWidth
     }
 }
 

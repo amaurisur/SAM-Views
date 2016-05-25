@@ -1,0 +1,25 @@
+{
+  "indicadores": [
+    {
+      "indicadores": [
+        {
+          "name": "Metrica Simple 1.1",
+          "posicion": 0
+        },
+        {
+          "name": "Metrica Simple 1.2",
+          "posicion": 0
+        }
+      ],
+      "name": "Metrica Compuesta 1",
+      "posicion": 0
+    },
+    {
+      "indicadores": [],
+      "name": "Metrica COmpuesta 2",
+      "posicion": 0
+    }
+  ],
+  "name": "RootNode",
+  "posicion": 0
+}
